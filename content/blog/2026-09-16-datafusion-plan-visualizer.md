@@ -25,7 +25,7 @@ That first year I only finished the operators I actually used. This staycation I
 The indented tree becomes an Excalidraw diagram. Color and arrows are the point: they show sort order and parallel streams, and how those properties flow through the plan. You can see whether filters and projections were pushed down, how many streams run at each operator, and whether the sort order you care about survived. The useful part is the break: the diagram pinpoints where parallelism or ordering is lost, which is usually where the bottleneck is.
 
 <figure class="plan-figure plan-demo">
-  <img src="/blog/diagrams/plan-visualizer/join-aggregates.jpg" alt="Join plus aggregates: a HashJoin feeding sorted aggregates, with parallel Parquet scans on each side." />
+  <img src="/nga-tran/diagrams/plan-visualizer/join-aggregates.jpg" alt="Join plus aggregates: a HashJoin feeding sorted aggregates, with parallel Parquet scans on each side." />
   <figcaption>Join + Aggregates</figcaption>
 </figure>
 
@@ -58,26 +58,26 @@ Thanks to Datadog for the kind of work that made me think about this useful tool
 ## Here are a few other plan shapes
 
 <figure class="plan-figure plan-demo">
-  <img src="/blog/diagrams/plan-visualizer/tpch-q11.jpg" alt="TPC-H query 11 physical plan, with partitioned hash joins and many parallel scans." />
+  <img src="/nga-tran/diagrams/plan-visualizer/tpch-q11.jpg" alt="TPC-H query 11 physical plan, with partitioned hash joins and many parallel scans." />
   <figcaption>TPC-H Q11</figcaption>
 </figure>
 
 <figure class="plan-figure plan-demo">
-  <img src="/blog/diagrams/plan-visualizer/simple-join.jpg" alt="A CollectLeft hash join between a small dimension scan and a sorted fact scan." />
+  <img src="/nga-tran/diagrams/plan-visualizer/simple-join.jpg" alt="A CollectLeft hash join between a small dimension scan and a sorted fact scan." />
   <figcaption>Simple join</figcaption>
 </figure>
 
 <figure class="plan-figure plan-demo">
-  <img src="/blog/diagrams/plan-visualizer/recursive-cte.jpg" alt="RecursiveQueryExec with a work table, hash join, and repartition on each side of the recursive step." />
+  <img src="/nga-tran/diagrams/plan-visualizer/recursive-cte.jpg" alt="RecursiveQueryExec with a work table, hash join, and repartition on each side of the recursive step." />
   <figcaption>Recursive CTE</figcaption>
 </figure>
 
 <figure class="plan-figure plan-demo">
-  <img src="/blog/diagrams/plan-visualizer/union-join.jpg" alt="A hash join whose probe side is a UnionExec of two fact scans, one of them sorted." />
+  <img src="/nga-tran/diagrams/plan-visualizer/union-join.jpg" alt="A hash join whose probe side is a UnionExec of two fact scans, one of them sorted." />
   <figcaption>Union and Join</figcaption>
 </figure>
 
 <figure class="plan-figure plan-demo">
-  <img src="/blog/diagrams/plan-visualizer/two-scalar-subqueries.jpg" alt="ScalarSubqueryExec with two projection branches, each over a PlaceholderRowExec." />
+  <img src="/nga-tran/diagrams/plan-visualizer/two-scalar-subqueries.jpg" alt="ScalarSubqueryExec with two projection branches, each over a PlaceholderRowExec." />
   <figcaption>Two Scalar Subqueries</figcaption>
 </figure>

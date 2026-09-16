@@ -1,6 +1,6 @@
 # Nga Tran's blog
 
-A static Astro blog published to GitHub Pages at [https://nga-tran.github.io/blog](https://nga-tran.github.io/blog).
+A static Astro blog published to GitHub Pages at [https://nga-tran.github.io/nga-tran](https://nga-tran.github.io/nga-tran).
 
 Posts are Markdown files in `content/blog/`. Source code lives in `src/`.
 
@@ -11,9 +11,9 @@ npm install
 npm run dev
 ```
 
-The site is served under the `/blog` base path: [http://localhost:4321/blog](http://localhost:4321/blog).
+The site is served under the `/nga-tran` base path: [http://localhost:4321/nga-tran](http://localhost:4321/nga-tran).
 
-Search lives at [http://localhost:4321/blog/search/](http://localhost:4321/blog/search/). Filter by keyword, tag, or both. Shareable URLs look like `/blog/search/?q=sharding&tag=InfluxDB`.
+Search lives at [http://localhost:4321/nga-tran/search/](http://localhost:4321/nga-tran/search/). Filter by keyword, tag, or both. Shareable URLs look like `/nga-tran/search/?q=sharding&tag=InfluxDB`.
 
 ## Writing a post
 
@@ -31,23 +31,19 @@ tags:
 Post body in Markdown.
 ```
 
-The date prefix is stripped from the URL. `2026-08-29-my-post.md` is published at `/blog/blog/my-post/`.
+The date prefix is stripped from the URL. `2026-08-29-my-post.md` is published at `/nga-tran/blog/my-post/`.
 
 Set `draft: true` to keep a post out of listings and RSS.
 
 ## Deploy to GitHub Pages
 
-1. Create a public repository named `blog` under the `nga-tran` GitHub account and push this project to `main`.
-2. In the repo: **Settings → Pages → Source → GitHub Actions**.
-3. The workflow in `.github/workflows/deploy.yml` builds the site and deploys on every push to `main`.
+Push to `main`. The workflow in `.github/workflows/deploy.yml` builds the site and publishes it to GitHub Pages.
 
-## Enable comments (giscus)
+## Comments
 
-Comments are a client-side embed. They stay hidden until you configure them:
+Each post’s comment thread is a GitHub Issue, rendered by [utterances](https://utteranc.es). The deploy workflow keeps a `comments` label on those issues.
 
-1. Enable **Discussions** on the `nga-tran/blog` repository.
-2. Open [giscus.app](https://giscus.app), connect the repo, and choose a discussion category.
-3. Copy `repo`, `repoId`, `category`, and `categoryId` into `src/lib/site.ts`.
+One-time setup: install the [utterances GitHub App](https://github.com/apps/utterances) on `NGA-TRAN/nga-tran`.
 
 ## Design notes
 

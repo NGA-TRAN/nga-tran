@@ -15,7 +15,7 @@ function isCurrent(href: string): boolean {
   const home = withBase().replace(/\/+$/, "") || "/";
   const normalized = href.replace(/\/+$/, "") || "/";
   if (normalized === home) {
-    return currentPath === home || currentPath === "/blog";
+    return currentPath === home;
   }
   return currentPath === normalized || currentPath.startsWith(`${normalized}/`);
 }

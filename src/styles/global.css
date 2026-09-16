@@ -674,9 +674,12 @@ html[data-theme="dark"] pre.astro-code span {
   font-size: 1.05rem;
 }
 
-.comments-note {
-  color: var(--muted);
-  font-size: 0.88rem;
+.comments-host {
+  min-height: 4rem;
+}
+
+.comments .utterances {
+  max-width: none;
 }
 
 .tag-cloud {

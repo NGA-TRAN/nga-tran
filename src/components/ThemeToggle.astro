@@ -20,12 +20,23 @@
     return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
   }
 
-  function syncGiscus(theme: "light" | "dark") {
-    const frame = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
-    frame?.contentWindow?.postMessage(
-      { giscus: { setConfig: { theme } } },
-      "https://giscus.app",
-    );
+  function utterancesTheme(theme: "light" | "dark") {
+    return theme === "dark" ? "github-dark" : "github-light";
+  }
+
+  function syncComments(theme: "light" | "dark") {
+    const frame = document.querySelector<HTMLIFrameElement>("iframe.utterances-frame");
+    if (!frame) return;
+
+    const payload = { type: "set-theme", theme: utterancesTheme(theme) };
+    const send = () => frame.contentWindow?.postMessage(payload, "https://utteranc.es");
+
+    if (frame.src.includes("utteranc.es")) {
+      send();
+      return;
+    }
+
+    frame.addEventListener("load", send, { once: true });
   }
 
   function applyTheme(theme: "light" | "dark") {
@@ -38,7 +49,7 @@
       button.setAttribute("aria-label", `Switch to ${next} theme`);
     });
 
-    syncGiscus(theme);
+    syncComments(theme);
   }
 
   applyTheme(currentTheme());

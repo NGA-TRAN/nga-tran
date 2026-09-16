@@ -25,16 +25,13 @@ export const contentTypes = {
 export type ContentType = keyof typeof contentTypes;
 
 /**
- * Fill these in after the GitHub repo exists:
- * 1. Enable Discussions on nga-tran/blog
- * 2. Install the giscus app: https://giscus.app
- * 3. Copy repo, repoId, category, and categoryId from giscus.app
+ * Comments are GitHub Issues, rendered by utterances.
+ * One-time setup: install https://github.com/apps/utterances on this repo.
  */
-export const giscus = {
-  repo: "nga-tran/blog",
-  repoId: "REPLACE_WITH_GISCUS_REPO_ID",
-  category: "Announcements",
-  categoryId: "REPLACE_WITH_GISCUS_CATEGORY_ID",
+export const comments = {
+  repo: "NGA-TRAN/nga-tran",
+  issueTerm: "pathname",
+  label: "comments",
 };
 
 export function withBase(path = ""): string {

@@ -1,6 +1,6 @@
 # Astro blog on GitHub Pages
 
-Scaffold a new Astro-based blog with Markdown content collections, client-side search (Pagefind), giscus comments, tag pages, RSS/SEO, and a GitHub Actions workflow that builds and deploys automatically to GitHub Pages at https://nga-tran.github.io/blog.
+Scaffold a new Astro-based blog with Markdown content collections, client-side search (Pagefind), utterances comments (GitHub Issues), tag pages, RSS/SEO, and a GitHub Actions workflow that builds and deploys automatically to GitHub Pages at https://nga-tran.github.io/nga-tran.
 
 ## Why Astro + these pieces
 
@@ -13,9 +13,9 @@ Chosen approach:
 
 - **Framework**: Astro 7 (content collections, fast builds, minimal client-side JS by default; pinned to a current patched release)
 - **Search**: [Pagefind](https://pagefind.app/) — indexes the built site at build time, ships a small client-side search UI, zero server required. Standard pairing with Astro static blogs.
-- **Comments**: [giscus](https://giscus.app/) — a client-side embed backed by GitHub Discussions on your own repo. Fits naturally since you're already on GitHub.
+- **Comments**: [utterances](https://utteranc.es/) — a client-side embed backed by GitHub Issues on this repo. Fits naturally since you're already on GitHub.
 - **Content format**: every blog entry is a single plain Markdown (`.md`) file with YAML frontmatter — no MDX, no database, no CMS. Writing a new post = adding one `.md` file to `content/blog/` at the repo root (kept out of `src/`, which holds only source code). This uses Astro's Content Layer API `glob()` loader, which supports pointing a collection at any directory, not just `src/content/`.
-- **Deploy target**: project page repo `nga-tran/blog`, served at the subpath `/blog` — so `astro.config.mjs` sets `site: "https://nga-tran.github.io"` and `base: "/blog"`. All internal links use Astro's base-aware helpers (`import.meta.env.BASE_URL`) so nothing breaks when served under the subpath.
+- **Deploy target**: project page repo `NGA-TRAN/nga-tran`, served at the subpath `/nga-tran` — so `astro.config.mjs` sets `site: "https://nga-tran.github.io"` and `base: "/nga-tran"` (overridable in CI via `SITE`/`BASE`). All internal links use Astro's base-aware helpers (`import.meta.env.BASE_URL`) so nothing breaks when served under the subpath.
 
 ## Site structure
 
@@ -51,14 +51,14 @@ flowchart LR
 
 - `package.json`, `tsconfig.json`, `astro.config.mjs`
   - Integrations: `@astrojs/sitemap` (no MDX integration — plain Markdown only)
-  - `site: "https://nga-tran.github.io"`, `base: "/blog"`
+  - `site: "https://nga-tran.github.io"`, `base: "/nga-tran"`
   - `postbuild` npm script: `pagefind --site dist` (pagefind's own asset URLs are base-aware when `base` is set)
 - `src/content.config.ts` — defines the `blog` collection using Astro's `glob()` content loader pointed at `../content/blog` (repo-root `content/` directory, outside `src/`), plus a Zod frontmatter schema: `title`, `description`, `pubDate`, `updatedDate?`, `tags: string[]`, `heroImage?`, `draft?`
 - `content/blog/` — repo-root directory (sibling of `src/`, not inside it); each post is exactly one `.md` file named `YYYY-MM-DD-slug.md` (or `YYYY-MM-DD-HH-mm-slug.md`) with YAML frontmatter matching the schema above, followed by the post body in Markdown; the date prefix is stripped from the public URL slug; 3 sample posts included covering different tags to demonstrate the layout, code blocks, and images
 - `src/layouts/BaseLayout.astro` — shared HTML shell: head/meta/OG tags, header, footer, includes Pagefind UI assets
-- `src/layouts/PostLayout.astro` — post title/date/tags header, prose content slot, giscus comments section at the bottom
-- `src/components/Header.astro`, `src/components/Footer.astro`, `src/components/PostCard.astro`, `src/components/TagList.astro`, `src/components/Comments.astro` (giscus `<script>` embed with data attributes as props)
-  - All internal `<a href>`s built with `import.meta.env.BASE_URL` (e.g. `${import.meta.env.BASE_URL}tags/${tag}`) so links resolve correctly under the `/blog` subpath
+- `src/layouts/PostLayout.astro` — post title/date/tags header, prose content slot, utterances comments section at the bottom
+- `src/components/Header.astro`, `src/components/Footer.astro`, `src/components/PostCard.astro`, `src/components/TagList.astro`, `src/components/Comments.astro` (utterances `<script>` embed backed by GitHub Issues)
+  - All internal `<a href>`s built with `import.meta.env.BASE_URL` (e.g. `${import.meta.env.BASE_URL}tags/${tag}`) so links resolve correctly under the `/nga-tran` subpath
 - `src/pages/index.astro` — home page listing posts newest-first (`getCollection('blog')`, filter `draft`, sort by `pubDate`)
 - `src/pages/blog/[...slug].astro` — individual post page using `getStaticPaths` + `render()`
 - `src/pages/tags/index.astro` — all tags overview
@@ -68,18 +68,15 @@ flowchart LR
 - `src/pages/rss.xml.js` — `@astrojs/rss` feed generator
 - `src/styles/global.css` — clean, modern, readable typography-focused styling (no framework, plain CSS with custom properties)
 - `public/favicon.svg`, `public/robots.txt`
-- `.github/workflows/deploy.yml` — on push to `main`: build, run pagefind postbuild, then `actions/upload-pages-artifact` + `actions/deploy-pages`
+- `.github/workflows/deploy.yml` — on push to `main`: build, run pagefind postbuild, then `actions/upload-pages-artifact` + `actions/deploy-pages`. The workflow also keeps a `comments` GitHub Issues label for utterances.
 - `.gitignore` — `node_modules`, `dist`, `.astro`
-- `README.md` — setup steps: how to run locally (`npm install && npm run dev` — runs at http://localhost:4321/blog), how to write a post (add a `.md` file to `content/blog/`, not `src/`), and the manual one-time steps required:
+- `README.md` — setup steps: how to run locally (`npm install && npm run dev` — runs at http://localhost:4321/nga-tran), how to write a post (add a `.md` file to `content/blog/`, not `src/`), and the remaining one-time step:
 
-  1. Create a repo named `blog` under `nga-tran` on GitHub and push this code to `main`
-  2. In repo Settings -> Pages, set Source to "GitHub Actions"
-  3. Enable Discussions on the repo, install the giscus GitHub App, and get your `data-repo-id`/`data-category-id` from giscus.app to fill into `Comments.astro`
+  1. Install the utterances GitHub App on `NGA-TRAN/nga-tran` so post comments can create and update GitHub Issues
 
 ## Notes / things you'll need to do post-scaffold (can't be scripted)
 
-- giscus requires you to authorize the giscus GitHub App on the actual repo and enable Discussions — placeholder config values are left in `src/lib/site.ts` for you to fill in from giscus.app once the repo exists.
-- First deploy requires manually flipping the repo's Pages source to "GitHub Actions" in repo settings.
+- utterances requires authorizing the utterances GitHub App on this repo. Issues are already enabled; the deploy workflow keeps a `comments` label for those threads.
 
 ## Out of scope
 

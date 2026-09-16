@@ -7,8 +7,8 @@ function fileFromMeta(meta) {
 }
 
 export default defineConfig({
-  site: "https://nga-tran.github.io",
-  base: "/blog",
+  site: process.env.SITE || "https://nga-tran.github.io",
+  base: process.env.BASE || "/nga-tran",
   integrations: [sitemap()],
   markdown: {
     shikiConfig: {

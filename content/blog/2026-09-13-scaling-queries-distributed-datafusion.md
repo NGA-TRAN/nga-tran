@@ -45,7 +45,7 @@ Two physical properties on `sales` matter more than the column list:
 That sort order is the opposite of the partition key. Partitioning on time is what makes a historical range cheap to open. Sorting on product then time is what makes the aggregation stream.
 
 <figure class="plan-figure">
-  <img src="/blog/diagrams/sales-partitions.svg" alt="products is a small unpartitioned dimension table. sales is a large fact table whose files sit on a timestamp by product_id grid." />
+  <img src="/nga-tran/diagrams/sales-partitions.svg" alt="products is a small unpartitioned dimension table. sales is a large fact table whose files sit on a timestamp by product_id grid." />
 </figure>
 
 ## The query: sales every 30 minutes for grocery products
@@ -94,7 +94,7 @@ The inner `GROUP BY` is the important rewrite. It collapses many sale rows into 
 After that rewrite, the physical plan looks like this:
 
 <figure class="plan-figure">
-  <img src="/blog/diagrams/single-node-plan.svg" alt="Single-node DataFusion plan: sales scan, date_bin projection, sorted aggregate on product_id and bin, join to products, hash repartition, final aggregate on name and bin." />
+  <img src="/nga-tran/diagrams/single-node-plan.svg" alt="Single-node DataFusion plan: sales scan, date_bin projection, sorted aggregate on product_id and bin, join to products, hash repartition, final aggregate on name and bin." />
 </figure>
 
 Read it from the bottom.
@@ -118,7 +118,7 @@ The dimension table stays small, so each worker can read `products` locally. The
 The hash repartition becomes a **network shuffle**. Partial sums for the same `(name, bin)` meet on the worker that owns that hash bucket, and the final aggregate finishes there.
 
 <figure class="plan-figure">
-  <img src="/blog/diagrams/distributed-plan.svg" alt="The same plan on two workers. Each worker reads products and a slice of sales. A network shuffle on name and bin feeds both final aggregates." />
+  <img src="/nga-tran/diagrams/distributed-plan.svg" alt="The same plan on two workers. Each worker reads products and a slice of sales. A network shuffle on name and bin feeds both final aggregates." />
 </figure>
 
 If the fact table grows, you add partitions and workers. The streaming prefix scales with the number of non-overlapping file groups. The shuffle stays small because it carries partial aggregates, not raw sales.
@@ -132,7 +132,7 @@ I ran this shape of query over historical ranges from a couple of days up to 60 
 The useful metric is **speedup**: single-node time divided by the time with *N* workers. Ideal linear scaling is a diagonal — 10 workers would be 10× faster, 50 workers 50× faster.
 
 <figure class="plan-figure">
-  <img src="/blog/diagrams/speedup-vs-workers.svg" alt="Speedup versus worker count for 2-day, 30-day, and 60-day ranges. Longer ranges stay closer to the ideal linear line, reaching about 40x at 51 workers on the 60-day query." />
+  <img src="/nga-tran/diagrams/speedup-vs-workers.svg" alt="Speedup versus worker count for 2-day, 30-day, and 60-day ranges. Longer ranges stay closer to the ideal linear line, reaching about 40x at 51 workers on the 60-day query." />
 </figure>
 
 Short ranges saturate early. A 2-day window does not have enough disjoint `sales` partitions to keep dozens of workers busy, so speedup levels off after a handful of nodes. Stretch the same query to 30 or 60 days and the curve stays near the diagonal. At 51 workers the 60-day run is about 40× faster than one node. That is the result you want from this plan: the extra workers do more of the same streaming work on disjoint partitions, not coordinate a bigger hash table.

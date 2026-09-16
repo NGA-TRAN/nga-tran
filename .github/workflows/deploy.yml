@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: pages
@@ -20,6 +21,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -29,6 +33,19 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env:
+          SITE: ${{ steps.pages.outputs.origin }}
+          BASE: ${{ steps.pages.outputs.base_path }}
+      - name: Ensure comments issue label
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create comments \
+            --repo "${{ github.repository }}" \
+            --description "Blog post comments (utterances)" \
+            --color "1d76db" \
+            --force
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
