@@ -11,7 +11,7 @@ ogImage: diagrams/plan-visualizer/linkedin.jpg
 
 If you work with DataFusion, you know the drill. Optimization starts with `EXPLAIN`. Then you slog through the indented tree, trying to follow sort order and parallel execution across operators. I used to redraw those plans in Excalidraw just to see them, explain them, and share them — I onboard newcomers, and walking through a plan is a lot easier when it is a picture. It was time-consuming. There had to be a better way.
 
-Last staycation I started automating the drawing, half because I needed it at work and half for fun. I am a backend person. I did not know much about frontend tools. My husband, [DinhDuy Tran](https://github.com/DINHDUY), designed the first version from the needs I described. AI agents did a lot of the UI work I would not have shipped on my own, but I still had to explain what each operator does — and sketch how it should look — before they could draw it.
+Last staycation I started automating the drawing, half because I needed it at work and half for fun. I am a backend person. I did not know much about frontend tools. AI agents did a lot of the UI work I would not have shipped on my own, but I still had to explain what each operator does — and sketch how it should look — before they could draw it.
 
 That first year I only finished the operators I actually used. This staycation I finished the rest of DataFusion's physical plan. I did not have to describe each new operator, or sketch it first: the models had gotten better, and last year's drawings were enough for them to figure out how the new ones should look. Checking those drawings taught me operators I rarely use, and a few I had only read about.
 
