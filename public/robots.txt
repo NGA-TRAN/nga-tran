@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nga-tran.github.io/nga-tran/sitemap-index.xml
+Sitemap: https://nga-tran.github.io/sitemap-index.xml

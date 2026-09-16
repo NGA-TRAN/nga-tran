@@ -1,6 +1,6 @@
 # Nga Tran's blog
 
-A static Astro blog published to GitHub Pages at [https://nga-tran.github.io/nga-tran](https://nga-tran.github.io/nga-tran).
+A static Astro blog published to GitHub Pages at [https://nga-tran.github.io](https://nga-tran.github.io).
 
 Posts are Markdown files in `content/blog/`. Source code lives in `src/`.
 
@@ -11,9 +11,9 @@ npm install
 npm run dev
 ```
 
-The site is served under the `/nga-tran` base path: [http://localhost:4321/nga-tran](http://localhost:4321/nga-tran).
+The site is served at the root: [http://localhost:4321/](http://localhost:4321/).
 
-Search lives at [http://localhost:4321/nga-tran/search/](http://localhost:4321/nga-tran/search/). Filter by keyword, tag, or both. Shareable URLs look like `/nga-tran/search/?q=sharding&tag=InfluxDB`.
+Search lives at [http://localhost:4321/search/](http://localhost:4321/search/). Filter by keyword, tag, or both. Shareable URLs look like `/search/?q=sharding&tag=InfluxDB`.
 
 ## Writing a post
 
@@ -31,7 +31,7 @@ tags:
 Post body in Markdown.
 ```
 
-The date prefix is stripped from the URL. `2026-08-29-my-post.md` is published at `/nga-tran/blog/my-post/`.
+The date prefix is stripped from the URL. `2026-08-29-my-post.md` is published at `/blog/my-post/`.
 
 Set `draft: true` to keep a post out of listings and RSS.
 
@@ -43,7 +43,7 @@ Push to `main`. The workflow in `.github/workflows/deploy.yml` builds the site a
 
 Each post’s comment thread is a GitHub Issue, rendered by [utterances](https://utteranc.es). The deploy workflow keeps a `comments` label on those issues.
 
-One-time setup: install the [utterances GitHub App](https://github.com/apps/utterances) on `NGA-TRAN/nga-tran`.
+One-time setup: install the [utterances GitHub App](https://github.com/apps/utterances) on `NGA-TRAN/nga-tran.github.io`.
 
 ## Design notes
 

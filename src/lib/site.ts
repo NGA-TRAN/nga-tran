@@ -29,7 +29,7 @@ export type ContentType = keyof typeof contentTypes;
  * One-time setup: install https://github.com/apps/utterances on this repo.
  */
 export const comments = {
-  repo: "NGA-TRAN/nga-tran",
+  repo: "NGA-TRAN/nga-tran.github.io",
   issueTerm: "pathname",
   label: "comments",
 };
