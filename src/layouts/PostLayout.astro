@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import PostMeta from "../components/PostMeta.astro";
+import TagList from "../components/TagList.astro";
+import Comments from "../components/Comments.astro";
+import { withBase } from "../lib/site";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { title, description, tags, heroImage, ogImage } = post.data;
+---
+
+<BaseLayout title={title} description={description} image={ogImage ?? heroImage}>
+  <article class="prose" data-pagefind-body>
+    <header>
+      <PostMeta post={post} />
+      <h1 class="page-title">{title}</h1>
+      <TagList tags={tags} />
+    </header>
+    {
+      heroImage && (
+        <img class="hero-image" src={withBase(heroImage)} alt={title} />
+      )
+    }
+    <slot />
+  </article>
+  <Comments />
+</BaseLayout>

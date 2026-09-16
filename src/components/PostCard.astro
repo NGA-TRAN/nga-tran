@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { withBase } from "../lib/site";
+import PostMeta from "./PostMeta.astro";
+import TagList from "./TagList.astro";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+---
+
+<article class="post-item">
+  <a class="post-card" href={withBase(`blog/${post.id}/`)}>
+    <PostMeta post={post} />
+    <h2>{post.data.title}</h2>
+    <p>{post.data.description}</p>
+  </a>
+  <div class="post-item-tags">
+    <TagList tags={post.data.tags} />
+  </div>
+</article>

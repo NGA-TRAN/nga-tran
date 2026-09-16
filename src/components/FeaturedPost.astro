@@ -1,0 +1,30 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import { withBase } from "../lib/site";
+import PostMeta from "./PostMeta.astro";
+import TagList from "./TagList.astro";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const href = withBase(`blog/${post.id}/`);
+const { Content } = await render(post);
+---
+
+<article class="featured-card">
+  <p class="featured-kicker">Latest</p>
+  <PostMeta post={post} />
+  <h2 class="featured-title">
+    <a href={href}>{post.data.title}</a>
+  </h2>
+  <TagList tags={post.data.tags} />
+  <div class="featured-preview prose" data-pagefind-ignore>
+    <Content />
+  </div>
+  <p class="featured-more">
+    <a href={href}>Continue reading</a>
+  </p>
+</article>

@@ -1,0 +1,11 @@
+---
+import { site, withBase } from "../lib/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <p>
+    &copy; {year} {site.author}. <a href={withBase("rss.xml")}>RSS</a>
+  </p>
+</footer>

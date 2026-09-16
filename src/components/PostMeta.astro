@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { contentTypes, formatDate, readingTime } from "../lib/site";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const typeLabel = contentTypes[post.data.type];
+const minutes = readingTime(post.body);
+---
+
+<p class="post-meta">
+  <span class="content-type">{typeLabel}</span>
+  <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+  <span>{minutes}</span>
+  {
+    post.data.updatedDate && (
+      <span>
+        Updated <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
+      </span>
+    )
+  }
+</p>

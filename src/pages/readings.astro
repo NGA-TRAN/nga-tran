@@ -1,0 +1,80 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { readingsUrl, site } from "../lib/site";
+
+const collections = [
+  {
+    title: "Basic readings, classes, and references",
+    href: readingsUrl("distributed_databases/basic_readings.md"),
+    description:
+      "Courses, books, and papers that introduce how databases work and how they are built.",
+  },
+  {
+    title: "Designs of open-source and commercial databases",
+    href: readingsUrl("distributed_databases/designs.md"),
+    description:
+      "Annotated papers and notes on architectures and the internals of specific systems.",
+    children: [
+      {
+        title: "Designs and implementation of InfluxData’s IOx",
+        href: readingsUrl("distributed_databases/designs_influxdb_iox.md"),
+      },
+      {
+        title: "Comparisons of internal implementations and offerings",
+        href: readingsUrl("distributed_databases/designs_comparisons.md"),
+      },
+      {
+        title: "High-level designs of various databases",
+        href: readingsUrl("distributed_databases/designs_high_level.md"),
+      },
+      {
+        title: "Designs of specific database components",
+        href: readingsUrl("distributed_databases/designs_components.md"),
+      },
+    ],
+  },
+  {
+    title: "Technical talks",
+    href: readingsUrl("distributed_databases/talks.md"),
+    description: "Talks on building and operating distributed database systems.",
+  },
+];
+---
+
+<BaseLayout
+  title="Other Readings"
+  description={`Earlier papers, classes, and talks ${site.author} still keeps on GitHub.`}
+>
+  <article class="prose">
+    <p class="intro-role">{site.role}</p>
+    <h1 class="page-title">Other Readings</h1>
+    <p>
+      This is my older collection of papers, classes, talks, and design notes. I still keep it on{" "}
+      <a href={readingsUrl()}>GitHub</a> and update it there. This site only links to that collection;
+      the lists themselves are not republished here.
+    </p>
+    {
+      collections.map((collection) => (
+        <section>
+          <h2>
+            <a href={collection.href}>
+              {collection.title} <span class="readings-on-github">on GitHub</span>
+            </a>
+          </h2>
+          <p>{collection.description}</p>
+          {collection.children && (
+            <ul>
+              {collection.children.map((child) => (
+                <li>
+                  <a href={child.href}>
+                    {child.title} <span class="readings-on-github">on GitHub</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))
+    }
+  </article>
+</BaseLayout>

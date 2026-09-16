@@ -1,0 +1,51 @@
+<button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark theme">
+  <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M21 14.3A9 9 0 0 1 9.7 3a7.2 7.2 0 1 0 11.3 11.3Z"
+    ></path>
+  </svg>
+  <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M12 7.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6Zm0-5.2h.8v3.2h-1.6V2h.8Zm0 16.8h.8v3.2h-1.6V18.8h.8ZM2 11.2h3.2v1.6H2v-1.6Zm16.8 0H22v1.6h-3.2v-1.6ZM4.7 3.6l2.3 2.3-1.1 1.1-2.3-2.3 1.1-1.1Zm13.4 13.4 2.3 2.3-1.1 1.1-2.3-2.3 1.1-1.1ZM5.9 17l1.1 1.1-2.3 2.3-1.1-1.1L5.9 17Zm13.4-13.4 1.1 1.1-2.3 2.3-1.1-1.1 2.3-2.3Z"
+    ></path>
+  </svg>
+</button>
+
+<script>
+  const STORAGE_KEY = "theme";
+
+  function currentTheme(): "light" | "dark" {
+    return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  }
+
+  function syncGiscus(theme: "light" | "dark") {
+    const frame = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
+    frame?.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme } } },
+      "https://giscus.app",
+    );
+  }
+
+  function applyTheme(theme: "light" | "dark") {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    localStorage.setItem(STORAGE_KEY, theme);
+
+    const next = theme === "dark" ? "light" : "dark";
+    document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((button) => {
+      button.setAttribute("aria-label", `Switch to ${next} theme`);
+    });
+
+    syncGiscus(theme);
+  }
+
+  applyTheme(currentTheme());
+
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      applyTheme(currentTheme() === "dark" ? "light" : "dark");
+    });
+  });
+</script>

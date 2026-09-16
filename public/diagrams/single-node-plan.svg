@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 620" role="img" aria-labelledby="title desc">
+  <title id="title">Single-node plan</title>
+  <desc id="desc">DataFusion plan: sales scan, date_bin projection, sorted aggregate on product_id and bin, join to products, hash repartition, final aggregate on name and bin.</desc>
+  <rect width="860" height="620" fill="#f6f5fb"/>
+  <text x="28" y="36" fill="#111" font-family="Inter, Segoe UI, sans-serif" font-size="20" font-weight="700">Single-node plan</text>
+  <text x="28" y="60" fill="#444" font-family="Inter, Segoe UI, sans-serif" font-size="14">Sales every 30 minutes by product name</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#6b4de6"/>
+    </marker>
+  </defs>
+
+  <g font-family="Inter, Segoe UI, sans-serif">
+    <g transform="translate(318,88)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">Aggregate</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">(name, bin)</text>
+    </g>
+    <g transform="translate(318,168)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">Repartition</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">(name, bin)</text>
+    </g>
+    <g transform="translate(318,248)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">Join</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">product_id</text>
+    </g>
+    <g transform="translate(88,348)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">DataSource</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">(products)</text>
+    </g>
+    <g transform="translate(318,348)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">Aggregate</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">(product_id, bin)</text>
+    </g>
+    <g transform="translate(318,428)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">Projection</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">(date_bin, ...)</text>
+    </g>
+    <g transform="translate(318,508)">
+      <rect width="168" height="46" rx="3" fill="#cfcfcf"/>
+      <text x="84" y="19" text-anchor="middle" font-size="13" fill="#111">DataSource</text>
+      <text x="84" y="36" text-anchor="middle" font-size="12" fill="#333">(sales)</text>
+    </g>
+  </g>
+
+  <g fill="none" stroke="#6b4de6" stroke-width="1.35" marker-end="url(#arrow)">
+    <line x1="360" y1="168" x2="360" y2="138"/>
+    <line x1="444" y1="168" x2="444" y2="138"/>
+    <line x1="360" y1="248" x2="360" y2="218"/>
+    <line x1="444" y1="248" x2="444" y2="218"/>
+    <line x1="360" y1="348" x2="360" y2="298"/>
+    <line x1="444" y1="348" x2="444" y2="298"/>
+    <line x1="360" y1="428" x2="360" y2="398"/>
+    <line x1="444" y1="428" x2="444" y2="398"/>
+    <line x1="360" y1="508" x2="360" y2="478"/>
+    <line x1="444" y1="508" x2="444" y2="478"/>
+    <line x1="172" y1="348" x2="318" y2="288"/>
+  </g>
+  <g fill="#6b4de6" font-family="Inter, Segoe UI, sans-serif" font-size="13">
+    <text x="396" y="156" text-anchor="middle">...</text>
+    <text x="396" y="236" text-anchor="middle">...</text>
+    <text x="412" y="326" text-anchor="middle">...</text>
+    <text x="396" y="416" text-anchor="middle">...</text>
+    <text x="396" y="496" text-anchor="middle">...</text>
+  </g>
+
+  <g fill="none" stroke="#6b4de6" stroke-width="1.15" stroke-dasharray="3 3" marker-end="url(#arrow)">
+    <path d="M210,434 C250,434 300,416 348,416"/>
+    <path d="M210,434 C250,480 300,493 348,493"/>
+  </g>
+  <text x="28" y="438" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">Non-overlapping partitions</text>
+  <text x="504" y="456" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">Sorted on (product_id, ts)</text>
+  <text x="504" y="376" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">Sorted on (product_id, bin)</text>
+
+  <g stroke="#2563eb" fill="none" stroke-width="1.15">
+    <line x1="780" y1="88" x2="780" y2="186"/>
+    <polyline points="775,88 780,80 785,88"/>
+    <polyline points="775,186 780,194 785,186"/>
+    <line x1="780" y1="196" x2="780" y2="554"/>
+    <polyline points="775,196 780,188 785,196"/>
+    <polyline points="775,554 780,562 785,554"/>
+  </g>
+  <text x="792" y="118" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">Non-pipeline</text>
+  <text x="792" y="136" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">parallel</text>
+  <text x="792" y="154" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">streaming</text>
+  <text x="792" y="360" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">Pipeline</text>
+  <text x="792" y="378" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">parallel</text>
+  <text x="792" y="396" fill="#2563eb" font-family="Inter, Segoe UI, sans-serif" font-size="13">streaming</text>
+</svg>

@@ -1,0 +1,222 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort((a, b) =>
+  a.localeCompare(b),
+);
+
+const index = posts.map((post) => ({
+  id: post.id,
+  tags: post.data.tags,
+  text: [post.data.title, post.data.description, post.data.type, ...post.data.tags, post.body ?? ""]
+    .join("\n")
+    .toLowerCase(),
+}));
+
+const indexJson = JSON.stringify(index).replace(/</g, "\\u003c");
+---
+
+<BaseLayout title="Search" description="Search posts by keyword or tag.">
+  <div class="search-page">
+    <h1 class="page-title">Search</h1>
+    <p class="lede">Find posts by keyword, tag, or both.</p>
+
+    <form class="search-form" data-search-form role="search">
+      <label class="visually-hidden" for="search-q">Search keywords</label>
+      <input
+        id="search-q"
+        class="search-input"
+        type="search"
+        name="q"
+        placeholder="Search titles, tags, or wording…"
+        autocomplete="off"
+        data-search-input
+      />
+      <button class="search-clear" type="button" data-search-clear hidden>Clear</button>
+    </form>
+
+    <section class="search-filters" data-search-filters aria-labelledby="search-tags-heading">
+      <h2 class="section-title" id="search-tags-heading">Tags</h2>
+      <div class="search-tag-list" role="group" aria-labelledby="search-tags-heading">
+        {
+          tags.map((tag) => (
+            <button type="button" class="search-tag" data-search-tag={tag} aria-pressed="false">
+              {tag}
+            </button>
+          ))
+        }
+      </div>
+    </section>
+
+    <p class="search-status" data-search-status aria-live="polite"></p>
+
+    <div class="post-list" data-search-results>
+      {
+        posts.map((post) => (
+          <div data-search-item={post.id}>
+            <PostCard post={post} />
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="search-empty" data-search-empty hidden>No posts match that search.</p>
+  </div>
+
+  <script type="application/json" id="search-index" set:html={indexJson} />
+
+  <script>
+    type SearchEntry = {
+      id: string;
+      tags: string[];
+      text: string;
+    };
+
+    const form = document.querySelector<HTMLFormElement>("[data-search-form]");
+    const input = document.querySelector<HTMLInputElement>("[data-search-input]");
+    const clear = document.querySelector<HTMLButtonElement>("[data-search-clear]");
+    const status = document.querySelector<HTMLElement>("[data-search-status]");
+    const empty = document.querySelector<HTMLElement>("[data-search-empty]");
+    const results = document.querySelector<HTMLElement>("[data-search-results]");
+    const filters = document.querySelector<HTMLElement>("[data-search-filters]");
+    const tagButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-search-tag]")];
+    const items = [...document.querySelectorAll<HTMLElement>("[data-search-item]")];
+
+    const index = JSON.parse(document.getElementById("search-index")?.textContent || "[]") as SearchEntry[];
+    const byId = new Map(index.map((entry) => [entry.id, entry]));
+
+    const selected = new Set<string>();
+    let debounce = 0;
+
+    function tokensFrom(query: string): string[] {
+      return query.toLowerCase().split(/\s+/).filter(Boolean);
+    }
+
+    function matchesKeyword(entry: SearchEntry, tokens: string[]): boolean {
+      return tokens.every((token) => entry.text.includes(token));
+    }
+
+    function matches(entry: SearchEntry, tokens: string[]): boolean {
+      if (selected.size > 0 && ![...selected].every((tag) => entry.tags.includes(tag))) {
+        return false;
+      }
+      return matchesKeyword(entry, tokens);
+    }
+
+    function activeTagsFor(tokens: string[]): Set<string> {
+      const active = new Set<string>();
+      for (const entry of index) {
+        if (!matches(entry, tokens)) continue;
+        for (const tag of entry.tags) active.add(tag);
+      }
+      for (const tag of selected) active.add(tag);
+      return active;
+    }
+
+    function labelFor(count: number, query: string): string {
+      const noun = count === 1 ? "post" : "posts";
+      const parts: string[] = [];
+      if (query) parts.push(`for “${query}”`);
+      if (selected.size > 0) {
+        const names = new Intl.ListFormat("en", { style: "long", type: "conjunction" }).format([
+          ...selected,
+        ]);
+        parts.push(`tagged ${names}`);
+      }
+      return parts.length > 0 ? `${count} ${noun} ${parts.join(" ")}.` : `${count} ${noun}.`;
+    }
+
+    function writeUrl(query: string) {
+      const url = new URL(window.location.href);
+      url.search = "";
+      if (query) url.searchParams.set("q", query);
+      for (const tag of selected) url.searchParams.append("tag", tag);
+      history.replaceState(null, "", url);
+    }
+
+    function apply(query = input?.value.trim() ?? "", push = true) {
+      const tokens = tokensFrom(query);
+      let visible = 0;
+
+      for (const item of items) {
+        const id = item.dataset.searchItem ?? "";
+        const entry = byId.get(id);
+        const show = entry ? matches(entry, tokens) : false;
+        item.hidden = !show;
+        if (show) visible += 1;
+      }
+
+      if (status) status.textContent = labelFor(visible, query);
+      if (empty) empty.hidden = visible > 0;
+      if (results) results.hidden = visible === 0;
+      if (clear) clear.hidden = query.length === 0 && selected.size === 0;
+
+      const activeTags = activeTagsFor(tokens);
+      let visibleTags = 0;
+      for (const button of tagButtons) {
+        const tag = button.dataset.searchTag ?? "";
+        const show = activeTags.has(tag);
+        button.hidden = !show;
+        button.setAttribute("aria-pressed", String(selected.has(tag)));
+        if (show) visibleTags += 1;
+      }
+      if (filters) filters.hidden = visibleTags === 0;
+
+      if (push) writeUrl(query);
+    }
+
+    function readUrl() {
+      const params = new URLSearchParams(window.location.search);
+      selected.clear();
+      for (const tag of params.getAll("tag")) selected.add(tag);
+      if (input) input.value = params.get("q") ?? "";
+      apply(input?.value.trim() ?? "", false);
+    }
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      apply();
+    });
+
+    input?.addEventListener("input", () => {
+      window.clearTimeout(debounce);
+      debounce = window.setTimeout(() => apply(), 120);
+    });
+
+    clear?.addEventListener("click", () => {
+      selected.clear();
+      if (input) input.value = "";
+      input?.focus();
+      apply("");
+    });
+
+    for (const button of tagButtons) {
+      button.addEventListener("click", () => {
+        const tag = button.dataset.searchTag ?? "";
+        if (selected.has(tag)) selected.delete(tag);
+        else selected.add(tag);
+        apply();
+      });
+    }
+
+    results?.addEventListener("click", (event) => {
+      const link = (event.target as HTMLElement).closest<HTMLAnchorElement>("a.tag");
+      if (!link) return;
+      event.preventDefault();
+      const tag = link.textContent?.trim() ?? "";
+      if (!tag) return;
+      if (selected.has(tag)) selected.delete(tag);
+      else selected.add(tag);
+      apply();
+    });
+
+    window.addEventListener("popstate", readUrl);
+    readUrl();
+  </script>
+</BaseLayout>

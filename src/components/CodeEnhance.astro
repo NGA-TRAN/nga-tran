@@ -1,0 +1,60 @@
+<script>
+  import { languageLabel } from "../lib/site";
+
+  function enhance(pre: HTMLElement) {
+    if (pre.closest(".code-block")) return;
+
+    const rawLang = pre.dataset.language ?? "text";
+    const [langPart, ...fileParts] = rawLang.split(":");
+    const file = pre.dataset.file || fileParts.join(":") || "";
+    const language = languageLabel(langPart || "text");
+
+    const wrap = document.createElement("div");
+    wrap.className = "code-block";
+
+    const bar = document.createElement("div");
+    bar.className = "code-toolbar";
+
+    const label = document.createElement("span");
+    label.className = "code-label";
+    label.textContent = file ? `${language} · ${file}` : language;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "code-copy";
+    button.textContent = "Copy";
+
+    button.addEventListener("click", async () => {
+      const text = pre.textContent ?? "";
+      const copied = await copyText(text);
+      button.textContent = copied ? "Copied" : "Copy";
+      window.setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1600);
+    });
+
+    bar.append(label, button);
+    pre.parentNode?.insertBefore(wrap, pre);
+    wrap.append(bar, pre);
+  }
+
+  async function copyText(text: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.append(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      return ok;
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>("pre.astro-code").forEach(enhance);
+</script>

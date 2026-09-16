@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, withBase } from "../lib/site";
+---
+
+<BaseLayout
+  title="About"
+  description={`${site.author} writes about the internals of distributed databases: query optimizers, execution engines, storage layers, and coordination.`}
+>
+  <article class="prose">
+    <p class="intro-role">{site.role}</p>
+    <h1 class="page-title">About</h1>
+    <p>
+      I’m <a href="https://www.linkedin.com/in/nga-tran-0641183/">Nga Tran</a>, and I focus on the internals of distributed databases — query optimizers, execution engines, storage layers, and coordination mechanisms — because this is where I can contribute the most depth and real‑world experience. My writing centers on practical, production‑tested engineering and well‑known benchmarks: the tradeoffs behind query planning, the realities of distributed execution, the patterns that emerge as systems scale, and the lessons learned from building and operating systems like Vertica, InfluxDB IOx, DataFusion, and Distributed DataFusion.
+    </p>
+    <p>
+      These posts are written for my own enjoyment, shaped by years of hands‑on work and continuous reading. Most have been reviewed by experts in their respective areas, though it’s inevitable that some details may occasionally miss the mark — distributed systems are complex, and we’re all still learning. All content here is grounded in publicly available information, and I’ll continue expanding it with more deep‑dive technical explorations. An earlier collection of annotated papers, classes, and talks still lives on GitHub; I keep that library there, and this site only links to it from <a href={withBase("readings/")}>Other Readings</a>.
+    </p>
+  </article>
+</BaseLayout>
