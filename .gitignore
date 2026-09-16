@@ -19,3 +19,6 @@ Thumbs.db
 .playwright-cli/
 /*.png
 /*.yml
+
+# agent and local scratch files
+.temp/

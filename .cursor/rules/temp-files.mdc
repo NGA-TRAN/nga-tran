@@ -1,0 +1,24 @@
+---
+description: Put generated scratch files only in .temp
+alwaysApply: true
+---
+
+# Temp files
+
+Write generated, disposable files only under `.temp/` at the repo root. Do not put them in the project root, `src/`, `content/`, `public/`, or `.playwright-cli/`.
+
+This includes screenshots, Playwright snapshots, YAML dumps, console logs, PDFs, scratch notes, and other artifacts created while debugging or verifying.
+
+```text
+# ❌ BAD
+live-homepage.png
+.playwright-cli/page-….yml
+/tmp-check.html
+
+# ✅ GOOD
+.temp/live-homepage.png
+.temp/page-homepage.yml
+.temp/check.html
+```
+
+Create `.temp/` if it does not exist. Do not commit it.
