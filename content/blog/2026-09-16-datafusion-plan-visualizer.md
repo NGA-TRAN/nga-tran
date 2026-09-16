@@ -29,7 +29,7 @@ The indented tree becomes an Excalidraw diagram. Color and arrows are the point:
   <figcaption>Join + Aggregates</figcaption>
 </figure>
 
-The diagram is editable. Export PNG or SVG for a doc. Open the JSON on [excalidraw.com](https://excalidraw.com/) if you want to annotate it with someone else. The app also works offline. More examples — TPC-H Q11, a simple join, a recursive CTE, a union plus join, and scalar subqueries — are at the [end of this post](#here-are-a-few-other-plan-shapes). They are samples in the app if you want to try them; the app has others too.
+The diagram is editable. Export PNG or SVG for a doc. Open the JSON on [excalidraw.com](https://excalidraw.com/) if you want to annotate it with someone else. The app also works offline. More examples — TPC-H Q11, a simple join, a recursive CTE, a union plus join, and scalar subqueries — are at the [end of this post](#here-are-a-few-other-plan-shapes). They are samples in [the app](https://nga-tran.github.io/plan-visualizer/) if you want to try them yourself; the app has others too.
 
 ## Use the library in your own UI
 
