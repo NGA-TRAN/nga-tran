@@ -43,7 +43,20 @@ function appLabel(app: (typeof apps)[number]): string | undefined {
               rel={external ? "noreferrer" : undefined}
             >
               {label && <p class="post-meta">{label}</p>}
-              <h2>{app.title}</h2>
+              <div class="app-heading">
+                {
+                  app.icon && (
+                    <img
+                      class="app-icon"
+                      src={withBase(app.icon)}
+                      alt=""
+                      width="38"
+                      height="38"
+                    />
+                  )
+                }
+                <h2>{app.title}</h2>
+              </div>
               <p>{app.description}</p>
             </a>
           </article>
