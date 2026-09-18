@@ -1,0 +1,36 @@
+---
+import { getApp } from "../lib/apps";
+import { withBase } from "../lib/site";
+
+interface Props {
+  appId: string;
+}
+
+const app = getApp(Astro.props.appId);
+const href = app && (/^https?:\/\//.test(app.href) ? app.href : withBase(app.href));
+const external = Boolean(href && /^https?:\/\//.test(href));
+---
+
+{
+  app && href && (
+    <a
+      class="app-jump"
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
+    >
+      {
+        app.icon && (
+          <img
+            class="app-icon"
+            src={withBase(app.icon)}
+            alt=""
+            width="30"
+            height="30"
+          />
+        )
+      }
+      <span>Try {app.title}</span>
+    </a>
+  )
+}
