@@ -401,11 +401,17 @@ html[data-theme="dark"] pre.astro-code span {
   color: var(--muted);
 }
 
-.post-list {
+.post-list,
+.app-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
   gap: 0.5rem;
   align-items: stretch;
+}
+
+.app-list > .post-item {
+  display: flex;
+  min-width: 0;
 }
 
 .post-list > [data-search-item] {

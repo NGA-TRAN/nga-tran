@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { apps } from "../lib/apps";
+import { site, withBase } from "../lib/site";
+
+function appHref(href: string): string {
+  if (/^https?:\/\//.test(href)) return href;
+  return withBase(href);
+}
+
+function appLabel(app: (typeof apps)[number]): string | undefined {
+  if (app.label) return app.label;
+  if (/^https?:\/\//.test(app.href)) return new URL(app.href).host;
+  return undefined;
+}
+---
+
+<BaseLayout
+  title="Apps"
+  description={`Sites and tools published by ${site.author}.`}
+>
+  <section class="intro">
+    <p class="intro-role">{site.role}</p>
+    <h1 class="page-title">Apps</h1>
+    <p class="lede">
+      Sites and tools I have published. Each entry is a live link and a one-line
+      description.
+    </p>
+  </section>
+
+  <div class="app-list">
+    {
+      apps.map((app) => {
+        const href = appHref(app.href);
+        const external = /^https?:\/\//.test(href);
+        const label = appLabel(app);
+        return (
+          <article class="post-item">
+            <a
+              class="post-card"
+              href={href}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noreferrer" : undefined}
+            >
+              {label && <p class="post-meta">{label}</p>}
+              <h2>{app.title}</h2>
+              <p>{app.description}</p>
+            </a>
+          </article>
+        );
+      })
+    }
+  </div>
+</BaseLayout>
