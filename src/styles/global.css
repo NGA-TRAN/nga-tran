@@ -217,6 +217,27 @@ html[data-theme="dark"] pre.astro-code span {
   text-transform: uppercase;
 }
 
+.app-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.2rem 0 0.55rem;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.app-jump:hover {
+  color: var(--accent);
+}
+
+.app-jump .app-icon {
+  width: 1.85rem;
+  height: 1.85rem;
+}
+
 .page-title {
   margin: 0 0 0.25rem;
   font-family: var(--display);

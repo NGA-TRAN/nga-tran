@@ -4,6 +4,7 @@ import BaseLayout from "./BaseLayout.astro";
 import PostMeta from "../components/PostMeta.astro";
 import TagList from "../components/TagList.astro";
 import Comments from "../components/Comments.astro";
+import AppJump from "../components/AppJump.astro";
 import { withBase } from "../lib/site";
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, tags, heroImage, ogImage } = post.data;
+const { title, description, tags, heroImage, ogImage, app } = post.data;
 ---
 
 <BaseLayout title={title} description={description} image={ogImage ?? heroImage}>
@@ -19,6 +20,7 @@ const { title, description, tags, heroImage, ogImage } = post.data;
     <header>
       <PostMeta post={post} />
       <h1 class="page-title">{title}</h1>
+      {app && <AppJump appId={app} />}
       <TagList tags={tags} />
     </header>
     {

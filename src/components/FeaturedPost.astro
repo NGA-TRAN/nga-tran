@@ -4,6 +4,7 @@ import { render } from "astro:content";
 import { withBase } from "../lib/site";
 import PostMeta from "./PostMeta.astro";
 import TagList from "./TagList.astro";
+import AppJump from "./AppJump.astro";
 
 interface Props {
   post: CollectionEntry<"blog">;
@@ -20,6 +21,7 @@ const { Content } = await render(post);
   <h2 class="featured-title">
     <a href={href}>{post.data.title}</a>
   </h2>
+  {post.data.app && <AppJump appId={post.data.app} />}
   <TagList tags={post.data.tags} />
   <div class="featured-preview prose" data-pagefind-ignore>
     <Content />

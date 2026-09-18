@@ -6,7 +6,9 @@ type: note
 tags:
   - DataFusion
   - Query Planning
+  - App
 ogImage: diagrams/plan-visualizer/linkedin.jpg
+app: plan-visualizer
 ---
 
 If you work with DataFusion, you know the drill. Optimization starts with `EXPLAIN`. Then you slog through the indented tree, trying to follow sort order and parallel execution across operators. I used to redraw those plans in Excalidraw just to see them, explain them, and share them — I onboard newcomers, and walking through a plan is a lot easier when it is a picture. It was time-consuming. There had to be a better way.
