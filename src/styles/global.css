@@ -414,6 +414,22 @@ html[data-theme="dark"] pre.astro-code span {
   min-width: 0;
 }
 
+.app-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-icon {
+  flex-shrink: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
 .post-list > [data-search-item] {
   display: flex;
   min-width: 0;
@@ -465,6 +481,10 @@ html[data-theme="dark"] pre.astro-code span {
   font-variation-settings: "wght" 600;
   -webkit-line-clamp: 2;
   line-clamp: 2;
+}
+
+.app-heading h2 {
+  min-height: 0;
 }
 
 .post-card p:not(.post-meta) {

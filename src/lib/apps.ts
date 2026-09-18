@@ -5,6 +5,8 @@ export type App = {
   href: string;
   /** Small line above the title. Defaults to the hostname for external links. */
   label?: string;
+  /** Site-relative path to a square app icon, e.g. `apps/plan-visualizer.png`. */
+  icon?: string;
 };
 
 /**
@@ -15,5 +17,6 @@ export const apps: App[] = [
     title: "Plan Visualizer",
     description: "Turns DataFusion EXPLAIN output into an Excalidraw diagram.",
     href: "https://nga-tran.github.io/plan-visualizer/",
+    icon: "apps/plan-visualizer.png",
   },
 ];
